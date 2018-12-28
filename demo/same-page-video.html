@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Same Page Video Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style>
+        .section{
+        padding: 1rem 1.5rem;
+    }
+    </style>
+</head>
+
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Same Page Video Demo</h1>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <h2 class="subtitle">Explanation:</h2>
+            <p>
+                Visit <code>same-page-video.html</code> to 'chat' between two clients on the same page and send video
+                from client 1 to client 2.
+            </p>
+        </div>
+    </section>
+    <section class="section">
+        <div class="columns">
+            <div id="client1" class="column">
+
+                <h2 class="title">client 1</h2>
+                <h3 class="title">Input:</h3>
+                <form>
+                    <textarea class="textarea" id="input"></textarea>
+                    <button type="submit">submit</button>
+                </form>
+                <h3 class="title">Output:</h3>
+                <samp id="outgoing"></samp>
+                <h3 class="title">Video Status:</h3>
+                <p id="status" class="notification is-info">pending</p>
+
+            </div>
+            <div id="client2" class="column has-background-grey-light">
+
+                <h2 class="title">client 2</h2>
+                <h3 class="title">Input:</h3>
+                <form>
+                    <textarea class="textarea" id="input"></textarea>
+                    <button type="submit">submit</button>
+                </form>
+                <h3 class="title">Output:</h3>
+                <samp id="outgoing"></samp>
+                <h3 class="title">Video:</h3>
+                <video poster="https://dummyimage.com/600x400/000/fff" playsinline muted>
+                </video>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.2.0/simplepeer.min.js"></script>
+<script>
+    var peer1 = new SimplePeer({ initiator: true })
+    var peer2 = new SimplePeer()
+
+    peer1.on('signal', function (data) {
+        // when peer1 has signaling data, give it to peer2 somehow
+        peer2.signal(data)
+    })
+
+    peer2.on('signal', function (data) {
+        // when peer2 has signaling data, give it to peer1 somehow
+        peer1.signal(data)
+    })
+
+    document.querySelector('#client1 > form').addEventListener('submit', function (ev) {
+        ev.preventDefault()
+        peer1.send(document.querySelector('#client1').querySelector('#input').value)
+    })
+
+    document.querySelector('#client2 > form').addEventListener('submit', function (ev) {
+        ev.preventDefault()
+        peer2.send(document.querySelector('#client2').querySelector(' #input').value)
+    })
+
+    peer1.on('data', function (data) {
+        // got a data channel message
+        let message = 'got a message from peer2: ' + data
+        console.log(message)
+        document.querySelector('#client1 > #outgoing').textContent = message
+    })
+
+    peer2.on('data', function (data) {
+        // got a data channel message
+        let message = 'got a message from peer1: ' + data
+        console.log(message)
+        document.querySelector('#client2 > #outgoing').textContent = message
+    })
+
+    peer2.on('stream', function (stream) {
+        // got remote video stream, now let's show it in a video tag
+        console.log("Got Video Stream!")
+        var video = document.querySelector('video')
+        video.src = window.URL.createObjectURL(stream)
+        video.play()
+    })
+
+    // get video/voice stream
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
+            /* use the stream */
+            peer1.addStream(stream)
+            document.querySelector('#client1 > #status').textContent = "streaming"
+            document.querySelector('#client1 > #status').classList.add("is-success")
+        })
+        .catch(function (err) {
+            /* handle the error */
+            document.querySelector('#client1 > #status').textContent = err
+            document.querySelector('#client1 > #status').classList.add("is-danger")
+        });
+
+</script>

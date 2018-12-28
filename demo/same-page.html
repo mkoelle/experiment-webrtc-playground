@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Same Page Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style>
+        .section{
+        padding: 1rem 1.5rem;
+    }
+    </style>
+</head>
+
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Same Page Demo</h1>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <h2 class="subtitle">Explanation:</h2>
+            <p>
+                Visit <code>same-page.html</code> to 'chat' between two clients on the same page.
+            </p>
+        </div>
+    </section>
+    <section class="section">
+        <div class="columns">
+            <div id="client1" class="column">
+
+                <h2 class="title">client 1</h2>
+                <h3 class="title">Input:</h3>
+                <form>
+                    <textarea class="textarea" id="input"></textarea>
+                    <button type="submit">submit</button>
+                </form>
+                <h3 class="title">Output:</h3>
+                <samp id="outgoing"></samp>
+
+            </div>
+            <div id="client2" class="column has-background-grey-light">
+
+                <h2 class="title">client 2</h2>
+                <h3 class="title">Input:</h3>
+                <form>
+                    <textarea class="textarea" id="input"></textarea>
+                    <button type="submit">submit</button>
+                </form>
+                <h3 class="title">Output:</h3>
+                <samp id="outgoing"></samp>
+
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.2.0/simplepeer.min.js"></script>
+<script>
+    var peer1 = new SimplePeer({ initiator: true })
+    var peer2 = new SimplePeer()
+
+    peer1.on('signal', function (data) {
+        // when peer1 has signaling data, give it to peer2 somehow
+        peer2.signal(data)
+    })
+
+    peer2.on('signal', function (data) {
+        // when peer2 has signaling data, give it to peer1 somehow
+        peer1.signal(data)
+    })
+
+    document.querySelector('#client1 > form').addEventListener('submit', function (ev) {
+        ev.preventDefault()
+        peer1.send(document.querySelector('#client1').querySelector('#input').value)
+    })
+
+    document.querySelector('#client2 > form').addEventListener('submit', function (ev) {
+        ev.preventDefault()
+        peer2.send(document.querySelector('#client2').querySelector(' #input').value)
+    })
+
+    peer1.on('data', function (data) {
+        // got a data channel message
+        let message = 'got a message from peer2: ' + data
+        console.log(message)
+        document.querySelector('#client1 > #outgoing').textContent = message
+    })
+
+    peer2.on('data', function (data) {
+        // got a data channel message
+        let message = 'got a message from peer1: ' + data
+        console.log(message)
+        document.querySelector('#client2 > #outgoing').textContent = message
+    })
+</script>
