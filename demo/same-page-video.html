@@ -109,7 +109,7 @@
         // got remote video stream, now let's show it in a video tag
         console.log("Got Video Stream!")
         var video = document.querySelector('video')
-        video.src = window.URL.createObjectURL(stream)
+        video.srcObject = stream
         video.play()
     })
 

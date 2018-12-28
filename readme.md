@@ -15,3 +15,4 @@ Under the `demo` folder I'm completing the samples available off the [simple-pee
 * [Free open source implementation of TURN and STUN Server](https://github.com/coturn/coturn)
 * [Learning WebRTC Peer-to-Peer Communication, Part 1](https://dzone.com/articles/learning-webrtc-peer-to-peer-communication-part-1)
 * [Learning WebRTC Peer-to-Peer Communication, Part 2](https://swizec.com/blog/learning-webrtc-peer-peer-communication-connecting-browsers-different-devices/swizec/8383)
+* [Taming WebRTC with PeerJS: Making a Simple P2P Web Game](https://www.toptal.com/webrtc/taming-webrtc-with-peerjs)
