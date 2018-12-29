@@ -16,3 +16,4 @@ Under the `demo` folder I'm completing the samples available off the [simple-pee
 * [Learning WebRTC Peer-to-Peer Communication, Part 1](https://dzone.com/articles/learning-webrtc-peer-to-peer-communication-part-1)
 * [Learning WebRTC Peer-to-Peer Communication, Part 2](https://swizec.com/blog/learning-webrtc-peer-peer-communication-connecting-browsers-different-devices/swizec/8383)
 * [Taming WebRTC with PeerJS: Making a Simple P2P Web Game](https://www.toptal.com/webrtc/taming-webrtc-with-peerjs)
+* [P2P Signaling for WebRTC](https://github.com/shama/letswritecode/tree/master/simple-p2p-with-webrtc)
